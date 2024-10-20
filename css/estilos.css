@@ -47,3 +47,9 @@
 .demo-list-icon {
   /* width: 300px; */
 }
+
+img {
+  width: 100%;
+  max-width: 1600px;
+  max-height: 400px;
+}

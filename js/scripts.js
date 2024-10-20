@@ -122,6 +122,10 @@ function configurarListenersMenu() {
     });
 }
 
+
+/*         Funcion para registrar service worker          */
+
+
 function start() {
   console.warn(document.querySelector("title").innerText);
 
