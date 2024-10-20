@@ -122,13 +122,26 @@ function configurarListenersMenu() {
     });
 }
 
-
 /*         Funcion para registrar service worker          */
-
+function registrarServiceWorker() {
+ if ('serviceWorker' in navigator) {
+  this.navigator.serviceWorker.register('/sw.js')
+   .then(reg => {
+   console.log('El service worker se ha registrado corectamente', reg)
+   })
+   .catch(err => {
+   console.error('Error al registrar el service worker',  err)
+   })
+ }
+ else {
+  console.error('service worker no está disponible en navigator')
+ }
+}
 
 function start() {
-  console.warn(document.querySelector("title").innerText);
+  console.warn(document.querySelector('title').innerText);
 
+  registrarServiceWorker();
   configurarListenersMenu();
   renderLista();
 }
