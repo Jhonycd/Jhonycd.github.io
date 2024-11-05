@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
  <meta charset="UTF-8">
@@ -9,6 +9,7 @@
 
  <!-- --------------PWA ó AWP-     Manifest------------------------------ -->
  <link rel="manifest" href="/manifest.json">
+ <meta name="theme-color" content="#3F51B5" />
 
  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-orange.min.css" />
@@ -27,10 +28,6 @@
     <div class="mdl-layout-spacer"></div>
     <!-- Navigation. We hide it in small screens. -->
     <nav class="mdl-navigation mdl-layout--large-screen-only">
-     <!--  <a class="mdl-navigation__link" href="">Link</a>
-     <a class="mdl-navigation__link" href="">Link</a>
-     <a class="mdl-navigation__link" href="">Link</a>
-     <a class="mdl-navigation__link" href="">Link</a> -->
     </nav>
    </div>
   </header>
@@ -50,6 +47,23 @@
     <!------------------------------------------------->
 
     <div><img src="./images/super.jpeg" alt="Banner de supermarket"></div>
+
+    <!-- ----------------------------------------------------------------------------------------- -->
+    <!--MENU MODAL para borrar todo con dialog de material design lite para que el alert no bloquee-->
+    <!-- ----------------------------------------------------------------------------------------- -->
+
+    <dialog class="mdl-dialog">
+     <h5 class="mdl-dialog__title">¿Confirma borrar todo?</h5> <br>
+     <div class="mdl-dialog__actions">
+      <button type="button" class="mdl-button aceptar">Aceptar</button>
+      <button type="button" class="mdl-button cancelar">Cancelar</button>
+     </div>
+    </dialog>
+
+
+
+
+
 
 
 
@@ -93,6 +107,29 @@
 
 
  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+ <!-- -------------------------------------------- -->
+ <!-- -----------  LIBRERIA JQUERY  -------------- -->
+ <!-- -----------  https://jquery.com/  -------------- -->
+ <!-- -----------  https://releases.jquery.com/  -------------- -->
+ <!-- -------------------------------------------- -->
+ <!-- https://www-w3schools-com.translate.goog/jquery/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=sc -->
+ <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+
+
+
+  <!-- ---------------------------------------------------------------- -->
+  <!------------------------HANDLEBARS-----(motor de plantillas)------  -->
+  <!--             https://handlebarsjs.com                             -->
+  <!-- cdn como en jquery    https://cdnjs.com/libraries/handlebars.js- -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"
+   integrity="sha512-E1dSFxg+wsfJ4HKjutk/WaCzK7S2wv1POn1RRPGh8ZK+ag9l244Vqxji3r6wgz9YBf6+vhQEYJZpSjqWFPg9gg=="
+   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+ <script src="js/api.js"></script> <!-- servicio para conectarnos con la api remota -->
  <script src="js/scripts.js"></script>
 
 </html>

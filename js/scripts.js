@@ -1,147 +1,148 @@
 /* -------------------------------------- */
 /*          VARIABLES GLOBALES            */
 /* -------------------------------------- */
-let listaProductos = [
-  { nombre: "Carne", cantidad: 2, precio: 12.34 },
-  { nombre: "Pan", cantidad: 3, precio: 34.56 },
-  { nombre: "Fideos", cantidad: 4, precio: 78.9 },
-  { nombre: "Leche", cantidad: 5, precio: 87.65 },
-  { nombre: "Crema", cantidad: 6, precio: 43.21 },
-];
-
-let crearLista = true;
-let ul;
+let listaProductos = [];
 
 /* -------------------------------------- */
 /*          FUNCIONES GLOBALES            */
 /* -------------------------------------- */
-function borrarProd(index) {
-  //console.log('borrarProd', index)
 
-  listaProductos.splice(index, 1);
+/*         Funcion para registrar service worker          */
+function registrarServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    this.navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg) => {
+        console.log("El service worker se ha registrado corectamente", reg);
+      })
+      .catch((err) => {
+        console.error("Error al registrar el service worker", err);
+      });
+  } else {
+    console.error("service worker no está disponible en navigator");
+  }
+}
+
+async function renderLista() {
+  const plantilla = await $.ajax({ url: "plantillas/productos.hbs" });
+  const template = Handlebars.compile(plantilla);
+  listaProductos = await apiProductos.get();
+  const html = template({ listaProductos: listaProductos });
+  $("#lista").html(html);
+  const ul = $("#contenedorLista");
+  componentHandler.upgradeElements(ul);
+}
+
+async function borrarProd(id) {
+  await apiProductos.delete(id);
   renderLista();
 }
 
-function cambiarValorProd(que, cual, el) {
-  console.log("cambiarValorProd", que, cual, el);
-  console.dir(el);
-
+async function cambiarValorProd(que, id, el) {
+  const cual = listaProductos.findIndex((p) => p.id == id);
   const valor = el.value;
-  //if(que == 'cantidad') listaProductos[cual].cantidad = parseInt(valor)
-  //else if(que == 'precio') listaProductos[cual].precio = parseFloat(valor)
+  listaProductos[cual][que] =que == "cantidad" ? parseInt(valor) : parseFloat(valor);
 
-  listaProductos[cual][que] =
-    que == "cantidad" ? parseInt(valor) : parseFloat(valor);
-}
-
-function renderLista() {
-  if (crearLista) {
-    ul = document.createElement("ul");
-    ul.classList.add("demo-list-icon", "mdl-list");
-  }
-
-  ul.innerHTML = "";
-  listaProductos.forEach((prod, index) => {
-    ul.innerHTML += `
-            <li class="mdl-list__item">
-                <!-- ícono del producto -->
-                <span class="mdl-list__item-primary-content w-10">
-                    <i class="material-icons mdl-list__item-icon">shopping_cart</i>
-                </span>
-    
-                <!-- nombre del producto -->
-                <span class="mdl-list__item-primary-content w-30">
-                    ${prod.nombre}
-                </span>
-    
-                <!-- cantidad de producto -->
-                <span class="mdl-list__item-primary-content w-20">
-                    <!-- Textfield with Floating Label -->
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input onblur="cambiarValorProd('cantidad',${index},this)" value="${prod.cantidad}" class="mdl-textfield__input" type="text" id="cantidad-${index}">
-                        <label class="mdl-textfield__label" for="cantidad-${index}">Cantidad</label>
-                    </div>
-                </span>
-    
-                <!-- precio de producto -->
-                <span class="mdl-list__item-primary-content w-20 ml-item">
-                    <!-- Textfield with Floating Label -->
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input onblur="cambiarValorProd('precio',${index},this)" value="${prod.precio}" class="mdl-textfield__input" type="text" id="precio-${index}">
-                        <label class="mdl-textfield__label" for="precio-${index}">Precio</label>
-                    </div>
-                </span>
-    
-                <!-- botón de borrado individual del producto en la lista -->
-                <span class="mdl-list__item-primary-content w-20 ml-item">
-                    <!-- Colored FAB button with ripple -->
-                    <button onclick="borrarProd(${index})"
-                        class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-                        <i class="material-icons">remove_shopping_cart</i>
-                    </button>
-                </span>
-            </li>
-        `;
-  });
-
-  if (crearLista) {
-    document.getElementById("lista").appendChild(ul);
-  } else {
-    componentHandler.upgradeElements(ul);
-  }
-
-  crearLista = false;
+  const producto = listaProductos[cual];
+  await apiProductos.put(id, producto);
 }
 
 function configurarListenersMenu() {
   /* botón agregar producto */
-  document
-    .getElementById("btn-entrada-producto")
-    .addEventListener("click", () => {
-      const input = document.getElementById("ingreso-producto");
-      const nombre = input.value;
-
-      //console.log(nombre)
-      const producto = { nombre: nombre, cantidad: 1, precio: 0 };
-      //console.log(producto)
-      listaProductos.push(producto);
-
-      renderLista();
-
-      input.value = "";
-    });
+  $("#btn-entrada-producto").click(async () => {
+    //el async va en la funcion mas proxima al await, por eso lo pongo en esta funcion callback
+    const input = $("#Agregar-Producto");
+    const nombre = input.val();
+    const producto = { nombre: nombre, cantidad: 1, precio: 0 };
+    await apiProductos.post(producto);
+    renderLista();
+    input.val("");
+  });
 
   /* botón borrar todo */
-  document
-    .getElementById("btn-borrar-productos")
-    .addEventListener("click", () => {
-      if (confirm("¿Desea borrar todos los productos?")) {
-        listaProductos = [];
-        renderLista();
-      }
-    });
+  $("#btn-borrar-productos").click(() => {
+    if (listaProductos.length) {
+      var dialog = $("dialog")[0];
+      dialog.showModal();
+    }
+  });
 }
 
-/*         Funcion para registrar service worker          */
-function registrarServiceWorker() {
- if ('serviceWorker' in navigator) {
-  this.navigator.serviceWorker.register('/sw.js')
-   .then(reg => {
-   console.log('El service worker se ha registrado corectamente', reg)
-   })
-   .catch(err => {
-   console.error('Error al registrar el service worker',  err)
-   })
+function iniDialog() {
+  var dialog = $("dialog")[0];
+  if (!dialog.showModal) {
+    dialogPolyfill.registerDialog(dialog);
  }
- else {
-  console.error('service worker no está disponible en navigator')
- }
+ 
+ $('dialog .aceptar').click(async ()=>  {
+  dialog.close()
+await apiProductos.deleteAll()
+  renderLista();
+ });
+ 
+  $('dialog .cancelar').click( ()=> {
+    dialog.close();
+  });
+
+  
+  
+  
+  
+  
+  /*dialog.querySelector(".cancelar").addEventListener("click", function () {
+    dialog.close();
+  });
+  dialog.querySelector(".aceptar").addEventListener("click", function () {
+    dialog.close();*/
+    
+}
+
+/*
+No me funciono usando jquery en la funcion iniDialog
+ $("dialog.aceptar").click(function () {
+    dialog.close();
+    listaProductos = [];
+    renderLista;
+  });
+ 
+ */
+
+async function testHandlebars() {
+  //lo hacemos para probar que funcione handlebars en principio, despues lo comentamos
+  //Es una plantilla que se parece a html, tiene la particularidad de manejar datos en plantillas
+  //EJEMPLO 1
+  // compile the template
+  // const template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
+  // execute the compiled template and print the output to the console
+  //const html = template({ doesWhat: "rocks!" });
+  //console.log(html);
+
+  //EJEMPLO 2
+  // compile the template
+  //const template = Handlebars.compile("<p>{{firstname}} {{lastname}}</p>");
+  // execute the compiled template and print the output to the console
+  //const html = template({
+  //firstname: "Yehuda",
+  //lastname: "Katz",
+  //});
+  //console.log(html);
+
+  //--------EJEMPLO 1 con AJAX (async/await)
+  //pido la plantilla al servidor con ajax
+  const plantilla = await $.ajax({ url: "plantillas/ejemplo1.hbs" });
+  // compile the template
+  const template = Handlebars.compile(plantilla);
+  // execute the compiled template and print the output to the console
+  const html = template({ doesWhat: "rocks!" });
+  console.log(html);
+
+  $("#lista").html(html);
 }
 
 function start() {
-  console.warn(document.querySelector('title').innerText);
-
+  console.warn($("title").text());
   registrarServiceWorker();
+  iniDialog();
   configurarListenersMenu();
   renderLista();
 }
@@ -149,4 +150,11 @@ function start() {
 /* -------------------------------------- */
 /*               EJECUCIÓN                */
 /* -------------------------------------- */
-start();
+//start();
+
+//otras formas de iniciar el programa, con el evento onload, o con evento onload y funcion flecha
+//window.onload = start;
+//window.onload = () => start();
+
+//inicializo con jquery
+$(document).ready(start); //ejecuta start cuando todo este cargado
