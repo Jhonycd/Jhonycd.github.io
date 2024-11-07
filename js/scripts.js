@@ -41,7 +41,8 @@ async function borrarProd(id) {
 async function cambiarValorProd(que, id, el) {
   const cual = listaProductos.findIndex((p) => p.id == id);
   const valor = el.value;
-  listaProductos[cual][que] =que == "cantidad" ? parseInt(valor) : parseFloat(valor);
+  listaProductos[cual][que] =
+    que == "cantidad" ? parseInt(valor) : parseFloat(valor);
 
   const producto = listaProductos[cual];
   await apiProductos.put(id, producto);
@@ -72,75 +73,67 @@ function iniDialog() {
   var dialog = $("dialog")[0];
   if (!dialog.showModal) {
     dialogPolyfill.registerDialog(dialog);
- }
- 
- $('dialog .aceptar').click(async ()=>  {
-  dialog.close()
-await apiProductos.deleteAll()
-  renderLista();
- });
- 
-  $('dialog .cancelar').click( ()=> {
+  }
+  $("dialog .aceptar").click(async () => {
+    dialog.close();
+    await apiProductos.deleteAll();
+    renderLista();
+  });
+  $("dialog .cancelar").click(() => {
     dialog.close();
   });
-
-  
-  
-  
-  
-  
-  /*dialog.querySelector(".cancelar").addEventListener("click", function () {
-    dialog.close();
-  });
-  dialog.querySelector(".aceptar").addEventListener("click", function () {
-    dialog.close();*/
-    
 }
 
-/*
-No me funciono usando jquery en la funcion iniDialog
- $("dialog.aceptar").click(function () {
-    dialog.close();
-    listaProductos = [];
-    renderLista;
-  });
- 
- */
+/*---------------------------------------------*/
+/*----------------CACHE------------------------*/
+/*-----Todos devuelven una promesa-------------*/
 
-async function testHandlebars() {
-  //lo hacemos para probar que funcione handlebars en principio, despues lo comentamos
-  //Es una plantilla que se parece a html, tiene la particularidad de manejar datos en plantillas
-  //EJEMPLO 1
-  // compile the template
-  // const template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
-  // execute the compiled template and print the output to the console
-  //const html = template({ doesWhat: "rocks!" });
-  //console.log(html);
+function testCache() {
+  if (window.caches) {
+    console.warn("El browser soporta caches");
 
-  //EJEMPLO 2
-  // compile the template
-  //const template = Handlebars.compile("<p>{{firstname}} {{lastname}}</p>");
-  // execute the compiled template and print the output to the console
-  //const html = template({
-  //firstname: "Yehuda",
-  //lastname: "Katz",
-  //});
-  //console.log(html);
+    //console.log(caches)
+    //Creo espacios de cache, puedo crear uno o varios  OPEN
+    caches.open("prueba-1");
+    caches.open("prueba-2");
+    caches.open("prueba-3");
+    caches.open("prueba-5");
 
-  //--------EJEMPLO 1 con AJAX (async/await)
-  //pido la plantilla al servidor con ajax
-  const plantilla = await $.ajax({ url: "plantillas/ejemplo1.hbs" });
-  // compile the template
-  const template = Handlebars.compile(plantilla);
-  // execute the compiled template and print the output to the console
-  const html = template({ doesWhat: "rocks!" });
-  console.log(html);
+    //has me revisa si existe un elemento en el cache, devuelve una promesa, un objeto promisse HAS
+    caches.has("prueba-2").then((rta) => console.log(rta)); //true
+    caches.has("prueba-4").then(console.log); //false
 
-  $("#lista").html(html);
+    //Borrar un cache DELETE
+    caches.delete("prueba-1").then(console.log);
+
+    //Recorrer y listar todos los nombres disponibles en caches  KEYS, tambien devuelve una promesa
+    caches.keys().then(console.log);
+
+    //Abro un cache disponoble y trabajo con el
+    caches.open("cache-v1.1").then((cache) => {
+      console.log("cache", cache);
+      console.log("caches", caches);
+
+      //Agrego un recurso al cache abierto, tambien devuelve una promesa,  ADD
+      cache.add("/index.html");
+
+      //Agrego varios recursos al cache abierto,van dentro de un array de recursos, tambien devuelve una promesa,  ADDALL
+     cache.addAll([
+      "/index.html",
+      "/css/estilos.css",
+      "/images/super.jpeg"
+     ]).then(() => {
+          console.log("Recursos Agregados");
+        });
+    });
+  } else {
+    console.error("El browser usado NO soporta caches");
+  }
 }
 
 function start() {
   console.warn($("title").text());
+  testCache();
   registrarServiceWorker();
   iniDialog();
   configurarListenersMenu();
@@ -150,11 +143,4 @@ function start() {
 /* -------------------------------------- */
 /*               EJECUCIÓN                */
 /* -------------------------------------- */
-//start();
-
-//otras formas de iniciar el programa, con el evento onload, o con evento onload y funcion flecha
-//window.onload = start;
-//window.onload = () => start();
-
-//inicializo con jquery
 $(document).ready(start); //ejecuta start cuando todo este cargado

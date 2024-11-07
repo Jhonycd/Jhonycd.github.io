@@ -39,15 +39,23 @@ const apiProductos = (function () {
   }
 
   async function deleteAll() {
-   for (let i = 0; i < listaProductos.length; i++) {
-     const id=listaProductos[i].id
-     await del(id);
-    
-    
-    
-     //foreach(producto in listaProductos),
-     //await del(listaProductos(id))
+    const progress = $("progress");
+    progress.css("display", "block");
+    let porcentaje = 0;
+    for (let i = 0; i < listaProductos.length; i++) {
+      porcentaje = parseInt(i * 100) / listaProductos.length;
+      console.log(porcentaje + "%");
+      progress.val(porcentaje);
+      const id = listaProductos[i].id;
+      await del(id);
     }
+
+    porcentaje = 100;
+    console.log(porcentaje + "%");
+    progress.val(porcentaje);
+    setTimeout(() => {
+      progress.css("display", "none");
+    }, 2000);
   }
 
   return {

@@ -10,11 +10,9 @@
  <!-- --------------PWA ó AWP-     Manifest------------------------------ -->
  <link rel="manifest" href="/manifest.json">
  <meta name="theme-color" content="#3F51B5" />
-
  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-orange.min.css" />
  <link rel="stylesheet" href="css/estilos.css">
-
 </head>
 
 <body>
@@ -48,6 +46,13 @@
 
     <div><img src="./images/super.jpeg" alt="Banner de supermarket"></div>
 
+ <!------------------------------------------------->
+ <!------Barra de progreso de borrar todo----------->
+ <!------------------------------------------------->
+
+ <progress min="0" max="100" value="0"></progress> <!-- controlaremos el value con js de a cuerdo al progreso que tengamos -->
+
+
     <!-- ----------------------------------------------------------------------------------------- -->
     <!--MENU MODAL para borrar todo con dialog de material design lite para que el alert no bloquee-->
     <!-- ----------------------------------------------------------------------------------------- -->
@@ -59,13 +64,6 @@
       <button type="button" class="mdl-button cancelar">Cancelar</button>
      </div>
     </dialog>
-
-
-
-
-
-
-
 
     <!------------------------------------------------->
     <!-------------------MENU-------------------------->
@@ -117,9 +115,6 @@
  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-
-
-
   <!-- ---------------------------------------------------------------- -->
   <!------------------------HANDLEBARS-----(motor de plantillas)------  -->
   <!--             https://handlebarsjs.com                             -->
@@ -128,8 +123,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"
    integrity="sha512-E1dSFxg+wsfJ4HKjutk/WaCzK7S2wv1POn1RRPGh8ZK+ag9l244Vqxji3r6wgz9YBf6+vhQEYJZpSjqWFPg9gg=="
    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
  <script src="js/api.js"></script> <!-- servicio para conectarnos con la api remota -->
  <script src="js/scripts.js"></script>
-
 </html>

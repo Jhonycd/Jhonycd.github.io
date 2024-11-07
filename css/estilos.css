@@ -45,11 +45,17 @@
 }
 
 .demo-list-icon {
-  /* width: 300px; */
+  background-color: rgb(220, 249, 240);/*le pongo color al fondo*/
 }
 
 img {
   width: 100%;
   max-width: 1600px;
   max-height: 400px;
+}
+
+progress {
+  width: 100%;
+  height: 20px;
+  display: none; /*esta propiedad (display:block) junto con el value lo vamos a controlar con js*/
 }
