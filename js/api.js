@@ -7,11 +7,21 @@ const apiProductos = (function () {
     );
   }
 
-  async function get() {
-    const prods = await $.ajax({ url: getUrl() });
-    return prods;
+ async function get() {
+  try {
+   const prods = await $.ajax({ url: getUrl() });
+   return prods;
   }
+  catch (error) {
+   console.error('ERROR DE GET', error)
+   const prods = leerListaProductos()
+   console.log(prods)
+   return prods
+  }
+ }
 
+
+ 
   async function post(producto) {
     const productoAgregado = await $.ajax({
       url: getUrl(),
