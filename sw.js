@@ -97,7 +97,7 @@ self.addEventListener("push", (e) => {
   const options = {
     body: `${datos}`,
     icon: "images/icons/icon-72x72.png",
-    badge: "https://images.app.goo.gl/ZGPoh4RPqqeGmmLRA",
+    badge: "badge/badge2.png",
   };
   e.waitUntil(self.registration.showNotification(title, options));
 });

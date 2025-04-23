@@ -2,26 +2,21 @@
 
 const apiProductos = (function () {
   function getUrl(id) {
-    return (
-      "https://6724fd3bc39fedae05b3849f.mockapi.io/api/productos/" + (id || "")
-    );
+    return "https://mockapi.io/projects/6791a8efaf8442fd737a8115";
   }
 
- async function get() {
-  try {
-   const prods = await $.ajax({ url: getUrl() });
-   return prods;
+  async function get() {
+    try {
+      const prods = await $.ajax({ url: getUrl() });
+      return prods;
+    } catch (error) {
+      console.error("ERROR DE GET", error);
+      const prods = leerListaProductos();
+      console.log(prods);
+      return prods;
+    }
   }
-  catch (error) {
-   console.error('ERROR DE GET', error)
-   const prods = leerListaProductos()
-   console.log(prods)
-   return prods
-  }
- }
 
-
- 
   async function post(producto) {
     const productoAgregado = await $.ajax({
       url: getUrl(),
